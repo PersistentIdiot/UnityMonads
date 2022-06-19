@@ -1,6 +1,9 @@
 ﻿## About
 Work in progress, an attempt to crystallize my understanding of Monads by implementing them in Unity and maybe help others understand and use them in Unity.
+
 These generics are at the edge of my understanding, and Rider is carrying me a lot with this, there may be obvious errors.
+
+Summaries from From [Recommended tags](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/recommended-tags)
 
 ## ToDo
 Search for "ToDo" through codebase and Do them.
