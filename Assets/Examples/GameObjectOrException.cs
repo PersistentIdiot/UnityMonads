@@ -1,13 +1,14 @@
 ﻿using System;
-using Com.JonBrant.Monads;
 using UnityEngine;
+using Com.JonBrant.Monads;
+using Com.PI.UnityMonads.Examples;
 
 
-namespace Monads.MaybeGameObjectMonad {
-    public class StringToGameObjectOrException : Maybe<GameObject> {
+namespace Com.PI.UnityMonads.Examples {
+    public class StringToGameObjectOrException : Maybe<GameObject, string> {
         public StringToGameObjectOrException(GameObject someValue) : base(someValue) { }
     }
-
+    
     // From Recommended tags - https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/xmldoc/recommended-tags
     /// <summary>
     /// <para>Creates a contract implementing types must abide by.</para>
@@ -16,18 +17,45 @@ namespace Monads.MaybeGameObjectMonad {
     /// <typeparamref name="IMaybeAwareRepository"/><typeparamref name="TDefault"/>.
     /// <remarks> ToDo: Figure out why the 'out' parameter is needed here. Rider suggested it. Try removing it and breaking it later</remarks>
     /// </summary>
-    public interface IMaybeDefault<out TDefault> {
-        // ReSharper disable once UnusedMemberInSuper.Global - Ignore Rider is saying 'Only implementations of these are used' as that's intended
+    public interface IMaybeDefault<TDefault, U> {
+        // ReSharper disable once UnusedMemberInSuper.Global // Ignore Rider is saying 'Only implementations of these are used' as that's intended
         TDefault Default { get; }
 
         // ReSharper disable once UnusedMemberInSuper.Global
-        Maybe<GameObject> MaybeGetNewGameObject(string requestedObjectName);
+        Maybe<TDefault,U> MaybeGetNewGameObject(string requestedObjectName);
     }
-
-    public class MaybeGameObjectRepo : IMaybeDefault<GameObject> {
+    
+    public class GameObjectMaybeDefaultRepo : IMaybeDefault<GameObject, string> {
         public GameObject Default { get; set; }
 
-        public Maybe<GameObject> MaybeGetNewGameObject(string requestedObjectName) {
+        public Maybe<GameObject,string> MaybeGetNewGameObject(string requestedObjectName) {
+            if (requestedObjectName == "Default") {
+                return new Maybe<GameObject, string>(Default);
+            }
+            else {
+                // Should I even throw here? I feel like I should just do nothing in this case.
+                throw new NotImplementedException();
+            }
+        }
+    }
+    /*
+    public class StringToGameObjectOrException : MaybeTest<T,U><GameObject> {
+        public StringToGameObjectOrException(GameObject someValue) : base(someValue) { }
+    }
+
+    
+    public interface IMaybeDefault<out TDefault, U> {
+        // ReSharper disable once UnusedMemberInSuper.Global // Ignore Rider is saying 'Only implementations of these are used' as that's intended
+        TDefault Default { get; }
+
+        // ReSharper disable once UnusedMemberInSuper.Global
+        MaybeTest<TDefault,U><GameObject> MaybeGetNewGameObject(string requestedObjectName);
+    }
+
+    public class GameObjectMaybeDefaultRepo : IMaybeDefault<GameObject> {
+        public TDefault Default { get; set; }
+
+        public MaybeTest<T,U><GameObject> MaybeGetNewGameObject(string requestedObjectName) {
             if (requestedObjectName == "Null") {
                 throw new Exception("Null object requested.");
             }
@@ -39,12 +67,12 @@ namespace Monads.MaybeGameObjectMonad {
 
     public class Client {
         Client() {
-            MaybeGameObjectRepo repo = new MaybeGameObjectRepo();
-            Maybe<GameObject> GameObjectOrError = repo.MaybeGetNewGameObject("Not null").Bind(EnsureGameObjectNotNull);
+            GameObjectMaybeDefaultRepo repo = new GameObjectMaybeDefaultRepo();
+            MaybeTest<T,U><GameObject> GameObjectOrError = repo.MaybeGetNewGameObject("Not null").Bind(EnsureGameObjectNotNull);
             GameObjectOrError.Value.name = "GameObject.Name";
         }
 
-        private Maybe<GameObject> EnsureGameObjectNotNull(GameObject arg) {
+        private MaybeTest<T,U><GameObject> EnsureGameObjectNotNull(GameObject arg) {
             if (arg == null) {
                 throw new Exception("Game Object was null. This exception exists because of a contract the Monad imposed");
             }
@@ -53,4 +81,5 @@ namespace Monads.MaybeGameObjectMonad {
             }
         }
     }
+    */
 }
