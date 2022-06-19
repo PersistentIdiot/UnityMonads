@@ -11,7 +11,10 @@ namespace PI.Monads.Unity {
     /// <typeparam name="T"></typeparam>
     public class Maybe<T, U>: Monad<T, U> {
         public T Value { get; }
-        public Maybe(T instance) : base(instance) { }
+
+        public Maybe(T instance) : base(instance) {
+            Value = instance;
+        }
 
         public override Monad<T, U> Bind(T param,Func<T, Monad<T, U>> f) {
             return Map(param, f);

@@ -33,6 +33,7 @@ namespace Com.PI.UnityMonads.Examples {
         public Maybe<GameObject, string> MaybeGetNewGameObject(string requestedObjectName) {
             if (requestedObjectName == "Default") {
                 return new Maybe<GameObject, string>(Default);
+                //return new Maybe<GameObject, string>(new GameObject(requestedObjectName));
             }
             else {
                 GameObject newObject = new GameObject("New Object");
@@ -42,7 +43,7 @@ namespace Com.PI.UnityMonads.Examples {
             }
         }
     }
-
+    /*
     public class Client {
         Client() {
             GameObjectMaybeDefaultRepo repo = new GameObjectMaybeDefaultRepo();
@@ -65,6 +66,7 @@ namespace Com.PI.UnityMonads.Examples {
             }
         }
     }
+    */
     /*
     public class StringToGameObjectOrException : MaybeTest<T,U><GameObject> {
         public StringToGameObjectOrException(GameObject someValue) : base(someValue) { }
