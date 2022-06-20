@@ -22,9 +22,7 @@ namespace Com.PI.UnityMonads.Examples {
         // ReSharper disable once UnusedMemberInSuper.Global
         Maybe<TDefault, U> MaybeGetNewGameObject(string requestedObjectName);
 
-        public TDefault Get() {
-            return Default;
-        }
+        public TDefault Get() { return Default; }
     }
 
     public class GameObjectMaybeDefaultRepo : IMaybeDefault<GameObject, string> {
@@ -41,6 +39,12 @@ namespace Com.PI.UnityMonads.Examples {
                 // Should I even throw here? I feel like I should just do nothing in this case.
                 //throw new NotImplementedException();
             }
+        }
+
+        public void InitTestData() {
+            // Initialize repo and populate with TestData
+            Default = new GameObject("New Object");
+
         }
     }
     /*
