@@ -8,25 +8,20 @@ using UnityEngine;
 
 public class MaybeMonadTest : MonoBehaviour {
     [SerializeField] private GameObject TestObject;
+    
     private void Awake() {
-
-        // Bug: This should require EnsureGameObjectNotNull to be passed to Bind, but appears to work without it. Adding bind causes multiple new objects to be created.
-        // Try moving test data into repo instead.
-        // New Bug: New object is created in both cases.
-
-        GameObjectMaybeDefaultRepo repo = new GameObjectMaybeDefaultRepo();
-        repo.InitTestData();
-        Maybe<GameObject, string> GameObjectOrError = repo.MaybeGetNewGameObject("Default").Bind(TestObject, EnsureGameObjectNotNull) as Maybe<GameObject, string>;
+        Maybe<GameObject, string> GameObjectOrError = GameObjectMaybeDefaultRepo.Instance.MaybeGetNewGameObject("Default").Bind(TestObject, EnsureGameObjectNotNull) as Maybe<GameObject, string>;
+        TestObject = GameObjectOrError.Value;
         Debug.LogFormat($"{GameObjectOrError.Value.name}");
     }
 
+    // ToDo: This being on client makes monads seem pointless. Move this out 
     private Monad<GameObject, string> EnsureGameObjectNotNull(GameObject arg) {
         if (arg == default) {
-            return new StringToGameObjectOrException(new GameObject("New Object."));
-            //throw new Exception($"{nameof(Client)}.{nameof(EnsureGameObjectNotNull)}() - {nameof(arg)} was default. ");
+            return GameObjectMaybeDefaultRepo.Instance.MaybeGetNewGameObject("Default");
         }
         else {
-            return new Maybe<GameObject, string>(arg);
+            return GameObjectMaybeDefaultRepo.Instance.MaybeGetNewGameObject(arg.name);
         }
     }
 }
